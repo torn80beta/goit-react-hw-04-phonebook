@@ -38,25 +38,37 @@ const App = () => {
     setFilter(event.target.value);
   };
 
+  const localContacts = () => {
+    return JSON.parse(localStorage.getItem('PHONEBOOK_CONTACTS'));
+  };
+
   useEffect(() => {
-    if (!JSON.parse(localStorage.getItem('PHONEBOOK_CONTACTS'))) {
+    if (!localContacts()) {
+      // console.log(localContacts());
       setContacts([
         { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56' },
         { id: nanoid(), name: 'Hermione Kline', number: '443-89-12' },
         { id: nanoid(), name: 'Eden Clements', number: '645-17-79' },
         { id: nanoid(), name: 'Annie Copeland', number: '227-91-26' },
       ]);
+      // console.log('First render. Default contacts set.');
     } else {
-      setContacts(JSON.parse(localStorage.getItem('PHONEBOOK_CONTACTS')));
+      setContacts(localContacts());
+      // console.log('First render. Contacts from storage set.');
     }
   }, []);
 
   useEffect(() => {
     if (isFirstRender.current === true) {
+      // console.log('Skip first render');
+      // console.log(localContacts());
       isFirstRender.current = false;
       return;
     }
+
     localStorage.setItem('PHONEBOOK_CONTACTS', JSON.stringify(contacts));
+    // console.log('Not a first render, contacts updated');
+    // console.log(localContacts()); // Чому на другому рендері локальні контакти дорівнюють []?
   }, [contacts]);
 
   return (
